@@ -27,14 +27,14 @@ export default function Password() {
       let loginPromise = verifyPassword({ username, password : values.password })
       toast.promise(loginPromise, {
         loading: 'Checking...',
-        success : <b>Login Successfully...!</b>,
+        success : <b>Correct Password</b>,
         error : <b>Password Not Match!</b>
       });
 
       loginPromise.then(res => {
         let { token } = res.data;
         localStorage.setItem('token', token);
-        navigate('/profile')
+        navigate('/otp')
       })
     }
   })

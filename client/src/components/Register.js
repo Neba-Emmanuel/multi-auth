@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import avatar from '../assets/profile.png';
 import toast, { Toaster } from 'react-hot-toast';
@@ -6,8 +6,6 @@ import { useFormik } from 'formik';
 import { registerValidation } from '../helper/validate';
 import convertToBase64 from '../helper/convert';
 import { registerUser } from '../helper/helper'
-import ReCAPTCHA from "react-google-recaptcha";
-
 
 import styles from '../styles/Username.module.css';
 
@@ -15,7 +13,6 @@ export default function Register() {
 
   const navigate = useNavigate()
   const [file, setFile] = useState()
-  const reRef = useRef()
 
   const formik = useFormik({
     initialValues : {
@@ -27,13 +24,8 @@ export default function Register() {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit : async values => {
-      const token = await reRef.current.executeAsync()
-      reRef.current.reset()
-
-      console.log('Recaptcha Token ', token)
-
       values = await Object.assign(values, { profile : file || ''})
-      let registerPromise = registerUser(values, token)
+      let registerPromise = registerUser(values)
       toast.promise(registerPromise, {
         loading: 'Creating...',
         success : <b>Register Successfully...!</b>,
@@ -89,11 +81,6 @@ export default function Register() {
 
         </div>
       </div>
-      <ReCAPTCHA
-        ref={reRef}
-        size="invisible"
-        sitekey="6Lf5ISUnAAAAAPesvyWYb-y5JZOv8_O27_2eMZBO"
-      />
     </div>
   )
 }
